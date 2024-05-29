@@ -21,11 +21,6 @@ public class FlightController {
         this.flightService = flightService;
     }
 
-    @RequestMapping("/")
-    public String helloWorld() {
-        return  "Hello World!";
-    }
-
     @PostMapping("/testing-api/clear")
     public void clear(){
         flightService.clear();
@@ -45,21 +40,14 @@ public class FlightController {
     @PutMapping("/admin-api/flights")
     @ResponseStatus(HttpStatus.CREATED)
     public Flight addFlight(@Valid @RequestBody AddFlightRequest request){
-        try {
             Flight flight = request.toFlight(flightService.getNewId());
             flightService.add(flight);
             return flight;
-        } catch (ResponseStatusException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred");
-        }
-
     }
 
     @GetMapping("/api/airports")
     public List<Airport> searchAirports(@RequestParam("search") String search){
-        return Collections.singletonList(flightService.searchAirport(search));
+        return flightService.searchAirport(search);
 
     }
 

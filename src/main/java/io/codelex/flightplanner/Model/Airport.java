@@ -1,26 +1,23 @@
 package io.codelex.flightplanner.Model;
 
-import jakarta.validation.Valid;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.codelex.flightplanner.Model.Serializer.AirportSerializer;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-
 import java.util.Objects;
 
+@JsonSerialize(using = AirportSerializer.class)
 public class Airport {
     @NotBlank(message = "Country must not be blank")
-    @NotEmpty(message = "Country must not be empty")
     private String country;
     @NotBlank(message = "City must not be blank")
-    @NotEmpty(message = "City must not be empty")
     private String city;
     @NotBlank(message = "Airport must not be blank")
-    @NotEmpty(message = "Airport must not be empty")
     private String airport;
 
     public Airport(String country, String city, String airport) {
-        this.country = country;
-        this.city = city;
-        this.airport = airport;
+        this.country = country.toUpperCase().trim();
+        this.city = city.toUpperCase().trim();
+        this.airport = airport.toUpperCase().trim();
     }
 
     public String getCountry() {

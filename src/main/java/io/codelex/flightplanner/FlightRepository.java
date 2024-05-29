@@ -11,21 +11,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
 public class FlightRepository {
 
     volatile List<Flight> dataRepository = new ArrayList<>();
-    volatile Long id = 0L;
+    volatile AtomicLong id = new AtomicLong(0);
 
     public synchronized void add(Flight flight){
-        System.out.println("testing add" + flight.getId());
         dataRepository.add(flight);
     }
 
     public synchronized void delete(Long id){
-        System.out.println("testing delete" + id);
-        dataRepository.remove(id);
+        if (id != null || dataRepository.size() > id){
+            dataRepository.remove(id);
+        }
     }
 
     public void clear(){
@@ -33,41 +34,44 @@ public class FlightRepository {
     }
 
     public synchronized Long getNewId(){
-        id+=1;
-        return id;
+        return id.addAndGet(1);
     }
 
     public boolean isExist(Flight flight){
         return dataRepository.contains(flight);
     }
 
-    public Airport searchAirport(String search) {
+    public List<Airport> searchAirport(String search) {
+        List<Airport> airports = new ArrayList<>();
         String searchUpper = search.toUpperCase().trim();
         for (Flight flight : dataRepository) {
             Airport from = flight.getFrom();
             if (matchesSearch(from, searchUpper)) {
-                return from;
+                airports.add(from);
             }
             Airport to = flight.getTo();
             if (matchesSearch(to, searchUpper)) {
-                return to;
+                airports.add(to);
             }
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found");
+        if (airports.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not Found");
+        }
+        return airports;
     }
 
     private boolean matchesSearch(Airport airport, String search) {
-        return airport.getAirport().toUpperCase().contains(search) ||
-                airport.getCity().toUpperCase().contains(search) ||
-                airport.getCountry().toUpperCase().contains(search);
+        return airport.getAirport().contains(search) ||
+                airport.getCity().contains(search) ||
+                airport.getCountry().contains(search);
     }
 
     public List<Flight> searchFlights(SearchFlightsRequest request) {
         Airport from;
         Airport to;
         try {
-            from = searchAirport(request.getFrom());
-            to = searchAirport(request.getTo());
+            from = searchAirport(request.getFrom()).getFirst();
+            to = searchAirport(request.getTo()).getFirst();
         } catch (ResponseStatusException e) {
             return Collections.emptyList();
         }
@@ -85,6 +89,7 @@ public class FlightRepository {
     public Flight findFlightById(Long id){
         for (Flight flight : dataRepository){
             if (flight.getId().equals(id)){
+                flight.getId();
                 return flight;
             }
         }

@@ -31,7 +31,7 @@ public class FlightService {
         return flightRepository.getNewId();
     }
 
-    public Airport searchAirport(String search){
+    public List<Airport> searchAirport(String search){
         return flightRepository.searchAirport(search);
     }
 

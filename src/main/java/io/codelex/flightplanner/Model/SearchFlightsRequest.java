@@ -19,7 +19,6 @@ public class SearchFlightsRequest {
     @NotNull(message = "baseDate must not be null")
     @NotEmpty(message = "baseDate must not be empty")
     @NotNull(message = "baseDate must not be null")
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private String departureDate;
 
     public SearchFlightsRequest(String from, String to, String departureDate) {

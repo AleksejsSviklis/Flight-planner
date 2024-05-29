@@ -1,10 +1,13 @@
 package io.codelex.flightplanner.Model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.codelex.flightplanner.Model.Serializer.FlightSerializer;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+@JsonSerialize(using = FlightSerializer.class)
 public class Flight {
     private Long id;
     private Airport from;
@@ -19,21 +22,15 @@ public class Flight {
         this.id = id;
         this.from = from;
         this.to = to;
-        this.carrier = carrier;
+        this.carrier = carrier.toUpperCase().trim();
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
     }
 
     public boolean isAirportSame(){
-        String countryTo = to.getCountry().toUpperCase();
-        String  cityTo = to.getCity().toUpperCase();
-        String  airportTo = to.getAirport().toUpperCase();
-
-        String countryFrom = from.getCountry().toUpperCase();
-        String  cityFrom = from.getCity().toUpperCase();
-        String  airportFrom = from.getAirport().toUpperCase();
-
-        return countryTo.equals(countryFrom) || cityTo.equals(cityFrom) || airportTo.equals(airportFrom);
+        return to.getCountry().equals(from.getCountry()) ||
+                to.getCity().equals(from.getCity()) ||
+                to.getAirport().equals(from.getAirport());
     }
 
     public boolean isDatesCorrect(){
