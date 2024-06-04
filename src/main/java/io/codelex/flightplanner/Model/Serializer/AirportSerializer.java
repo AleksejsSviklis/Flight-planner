@@ -21,7 +21,7 @@ public class AirportSerializer extends JsonSerializer<Airport> {
                         airport.getCity().substring(1).toLowerCase()
         );
         jsonGenerator.writeStringField("airport",
-                airport.getAirport()
+                airport.getAirportName()
         );
         jsonGenerator.writeEndObject();
     }

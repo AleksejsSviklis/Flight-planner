@@ -1,23 +1,45 @@
 package io.codelex.flightplanner.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.codelex.flightplanner.Model.Serializer.AirportSerializer;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
 
+@Entity
 @JsonSerialize(using = AirportSerializer.class)
 public class Airport {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     @NotBlank(message = "Country must not be blank")
     private String country;
     @NotBlank(message = "City must not be blank")
     private String city;
-    @NotBlank(message = "Airport must not be blank")
-    private String airport;
+    @NotBlank(message = "Airport name must not be blank")
+    private String airportName;
 
-    public Airport(String country, String city, String airport) {
+    public Airport(String country, String city, String airportName) {
         this.country = country.toUpperCase().trim();
         this.city = city.toUpperCase().trim();
-        this.airport = airport.toUpperCase().trim();
+        this.airportName = airportName.toUpperCase().trim();
+    }
+
+    public Airport() {
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getCountry() {
@@ -25,7 +47,7 @@ public class Airport {
     }
 
     public void setCountry(String country) {
-        this.country = country;
+        this.country = country.toUpperCase().trim();
     }
 
     public String getCity() {
@@ -33,15 +55,15 @@ public class Airport {
     }
 
     public void setCity(String city) {
-        this.city = city;
+        this.city = city.toUpperCase().trim();
     }
-
-    public String getAirport() {
-        return airport;
+    @JsonProperty("airport")
+    public String getAirportName() {
+        return airportName;
     }
-
-    public void setAirport(String airport) {
-        this.airport = airport;
+    @JsonProperty("airport")
+    public void setAirportName(String airport) {
+        this.airportName = airport.toUpperCase().trim();
     }
 
     @Override
@@ -51,12 +73,12 @@ public class Airport {
         Airport airport1 = (Airport) o;
         return country.equalsIgnoreCase(airport1.country) &&
                 city.equalsIgnoreCase(airport1.city) &&
-                airport.equalsIgnoreCase(airport1.airport);
+                airportName.equalsIgnoreCase(airport1.airportName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(country, city, airport);
+        return Objects.hash(country, city, airportName);
     }
 
 }

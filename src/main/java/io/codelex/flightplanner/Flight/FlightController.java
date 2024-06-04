@@ -1,29 +1,31 @@
-package io.codelex.flightplanner;
+package io.codelex.flightplanner.Flight;
 
 import io.codelex.flightplanner.Model.*;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Collections;
 import java.util.List;
 
 @RestController
 @Validated
 public class FlightController {
 
-    private final FlightService flightService;
+    @Value("${app.storage-mode}")
+    private String storageMode;
 
-    public FlightController(FlightService flightService){
-        this.flightService = flightService;
+    private final FlightServise flightServise;
+
+    public FlightController(FlightServise flightServise){
+        this.flightServise = flightServise;
     }
 
     @PostMapping("/testing-api/clear")
     public void clear(){
-        flightService.clear();
+        flightServise.clear();
     }
 
     @GetMapping("/admin-api/flights/{id}")
@@ -34,31 +36,29 @@ public class FlightController {
     @DeleteMapping("/admin-api/flights/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteFlight(@PathVariable("id") String id){
-        flightService.delete(Long.valueOf(id));
+        flightServise.delete(Long.valueOf(id));
     }
 
     @PutMapping("/admin-api/flights")
     @ResponseStatus(HttpStatus.CREATED)
     public Flight addFlight(@Valid @RequestBody AddFlightRequest request){
-            Flight flight = request.toFlight(flightService.getNewId());
-            flightService.add(flight);
-            return flight;
+        return flightServise.add(request);
     }
 
     @GetMapping("/api/airports")
     public List<Airport> searchAirports(@RequestParam("search") String search){
-        return flightService.searchAirport(search);
+        return flightServise.searchAirport(search);
 
     }
 
     @PostMapping("/api/flights/search")
     public PageResult searchFlights(@Valid @RequestBody SearchFlightsRequest request){
-        return flightService.searchFlights(request);
+        return flightServise.searchFlights(request);
     }
 
     @GetMapping("/api/flights/{id}")
     public Flight findFlightById(@PathVariable("id") String id){
-        return flightService.findFlightById(Long.valueOf(id));
+        return flightServise.findFlightById(Long.valueOf(id));
     }
 
 }
