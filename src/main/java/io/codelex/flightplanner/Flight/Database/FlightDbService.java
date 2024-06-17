@@ -4,7 +4,6 @@ import io.codelex.flightplanner.Flight.FlightServise;
 import io.codelex.flightplanner.Model.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 public class FlightDbService implements FlightServise {
@@ -41,12 +40,7 @@ public class FlightDbService implements FlightServise {
             throw new ResponseStatusException(HttpStatus.valueOf(400), "Cannot be the same airports");
         }
 
-        List<Flight> flights = flightDbRepository.searchFlights(request.getFrom(), request.getTo());
-        for (Flight flight : flights) {
-            if (!flight.getDepartureTime().toString().contains(request.getDepartureDate())) {
-                flights.remove(flight);
-            }
-        }
+        List<Flight> flights = flightDbRepository.searchFlights(request.getFrom(), request.getTo() , request.getDepartureDate());
 
         return new PageResult(0, flights.size(), flights);
     }
@@ -62,35 +56,24 @@ public class FlightDbService implements FlightServise {
             throw new ResponseStatusException(HttpStatus.valueOf(400), "Cannot be able to add strange dates");
         }
 
-        Airport from = flight.getFrom();
-        List<Airport> airports = airportDbRepository.findAirportByAirportName(from.getAirportName());
-        if (airports.isEmpty()) {
-            airportDbRepository.save(from);
-        }
-        flight.setFrom(airportDbRepository.findAirportByAirportName(from.getAirportName()).getFirst());
-
-        airports.clear();
-
-        Airport to = flight.getTo();
-        airports = airportDbRepository.findAirportByAirportName(to.getAirportName());
-        if (airports.isEmpty()){
-            airportDbRepository.save(to);
-        }
-        flight.setTo(airportDbRepository.findAirportByAirportName(to.getAirportName()).getFirst());
+        flight.setFrom(getOrCreate(flight.getFrom()));
+        flight.setTo(getOrCreate(flight.getTo()));
 
         try {
-            flightDbRepository.save(flight);
+            return flightDbRepository.save(flight);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.valueOf(409), "Cannot be able to add same flight twice");
         }
 
-        return flightDbRepository.searchFlights(flight.getFrom().getAirportName(),
-                flight.getTo().getAirportName())
-                .stream()
-                .filter(f -> f.equals(flight))
-                .findFirst()
-                .get();
+    }
 
+    private Airport getOrCreate(Airport airport) {
+        List<Airport> airports = airportDbRepository.findAirportByAirportName(airport.getAirportName());
+        if (airports.isEmpty()) {
+            return airportDbRepository.save(airport);
+        } else {
+            return airports.get(0);
+        }
     }
 
     @Override

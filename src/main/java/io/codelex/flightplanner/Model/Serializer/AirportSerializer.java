@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.codelex.flightplanner.Model.Airport;
-
 import java.io.IOException;
 
 public class AirportSerializer extends JsonSerializer<Airport> {

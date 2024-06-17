@@ -2,20 +2,14 @@ package io.codelex.flightplanner.Flight;
 
 import io.codelex.flightplanner.Model.*;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @RestController
 @Validated
 public class FlightController {
-
-    @Value("${app.storage-mode}")
-    private String storageMode;
 
     private final FlightServise flightServise;
 
@@ -30,7 +24,7 @@ public class FlightController {
 
     @GetMapping("/admin-api/flights/{id}")
     public Flight getFlight(@PathVariable("id") Long id){
-        throw new ResponseStatusException(HttpStatus.valueOf(404));
+        return flightServise.findFlightById(Long.valueOf(id));
     }
 
     @DeleteMapping("/admin-api/flights/{id}")

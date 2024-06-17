@@ -1,7 +1,6 @@
 package io.codelex.flightplanner.Flight;
 
 import io.codelex.flightplanner.Model.*;
-
 import java.util.List;
 
 public interface FlightServise {

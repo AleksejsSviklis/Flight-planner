@@ -1,6 +1,5 @@
 package io.codelex.flightplanner.Model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.codelex.flightplanner.Model.Serializer.AirportSerializer;

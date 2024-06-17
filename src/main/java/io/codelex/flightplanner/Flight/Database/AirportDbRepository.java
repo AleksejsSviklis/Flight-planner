@@ -14,11 +14,5 @@ public interface AirportDbRepository extends JpaRepository<Airport, Long> {
     @Query("SELECT a FROM Airport a WHERE a.airportName LIKE %:search% OR a.country LIKE %:search% OR a.city LIKE %:search%")
     List<Airport> searchAirports(@Param("search") String search);
 
-//    SELECT *
-//    FROM airport
-//    WHERE AIRPORT_NAME LIKE '%I%'
-//    OR CITY LIKE '%I%'
-//    OR COUNTRY LIKE '%I%'
-
 }
 
