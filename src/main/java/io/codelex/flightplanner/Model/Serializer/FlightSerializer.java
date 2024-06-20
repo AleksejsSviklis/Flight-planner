@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.codelex.flightplanner.Model.Flight;
-
 import java.io.IOException;
 import java.time.format.DateTimeFormatter;
 

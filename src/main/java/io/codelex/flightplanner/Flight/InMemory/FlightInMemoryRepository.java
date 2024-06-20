@@ -1,4 +1,4 @@
-package io.codelex.flightplanner;
+package io.codelex.flightplanner.Flight.InMemory;
 
 import io.codelex.flightplanner.Model.Airport;
 import io.codelex.flightplanner.Model.Flight;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class FlightRepository {
+public class FlightInMemoryRepository {
 
     volatile List<Flight> dataRepository = new ArrayList<>();
     volatile AtomicLong id = new AtomicLong(0);
@@ -61,7 +61,7 @@ public class FlightRepository {
     }
 
     private boolean matchesSearch(Airport airport, String search) {
-        return airport.getAirport().contains(search) ||
+        return airport.getAirportName().contains(search) ||
                 airport.getCity().contains(search) ||
                 airport.getCountry().contains(search);
     }

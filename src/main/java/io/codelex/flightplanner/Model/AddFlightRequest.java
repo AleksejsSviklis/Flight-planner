@@ -3,7 +3,6 @@ package io.codelex.flightplanner.Model;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -67,14 +66,37 @@ public class AddFlightRequest {
         return arrivalTime;
     }
 
-    public Flight toFlight(Long id){
-        return new Flight(
-                id,
-                from,
-                to,
-                carrier,
-                LocalDateTime.parse(departureTime, formatter),
-                LocalDateTime.parse(arrivalTime, formatter)
-        );
+    @Override
+    public String toString() {
+        return "AddFlightRequest{" +
+                "from=" + from +
+                ", to=" + to +
+                ", carrier='" + carrier + '\'' +
+                ", departureTime='" + departureTime + '\'' +
+                ", arrivalTime='" + arrivalTime + '\'' +
+                ", formatter=" + formatter +
+                '}';
     }
+
+    public Flight toFlight(Long id){
+        if (id == null) {
+            return new Flight(
+                    from,
+                    to,
+                    carrier,
+                    LocalDateTime.parse(departureTime, formatter),
+                    LocalDateTime.parse(arrivalTime, formatter)
+            );
+        } else {
+            return new Flight(
+                    id,
+                    from,
+                    to,
+                    carrier,
+                    LocalDateTime.parse(departureTime, formatter),
+                    LocalDateTime.parse(arrivalTime, formatter)
+            );
+        }
+    }
+
 }

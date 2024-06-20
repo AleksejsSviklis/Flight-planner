@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.codelex.flightplanner.Model.Airport;
-
 import java.io.IOException;
 
 public class AirportSerializer extends JsonSerializer<Airport> {
@@ -21,7 +20,7 @@ public class AirportSerializer extends JsonSerializer<Airport> {
                         airport.getCity().substring(1).toLowerCase()
         );
         jsonGenerator.writeStringField("airport",
-                airport.getAirport()
+                airport.getAirportName()
         );
         jsonGenerator.writeEndObject();
     }
